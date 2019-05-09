@@ -21,6 +21,7 @@ def index(request):
 
 class BlogListView(generic.ListView):
     model = Blog
+    paginate_by = 2
 
 class BlogDetailView(generic.DetailView):
     model = Blog
