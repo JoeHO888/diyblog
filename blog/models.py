@@ -29,7 +29,7 @@ class Blog(models.Model):
         ordering = ['-date']
 
     def display_most_recent_comment(self):
-        comment = Comment.objects.filter(blog=self.id)[0].content
+        comment = "No Comment" or Comment.objects.filter(blog=self.id)[0].content
         return comment
     
     display_most_recent_comment.short_description = 'Most Recent Comment'
