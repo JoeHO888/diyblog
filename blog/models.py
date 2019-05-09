@@ -4,6 +4,21 @@ from django.urls import reverse # Used to generate URLs by reversing the URL pat
 from django.contrib.auth.models import User
 import uuid
 
+class Comment(models.Model):
+    commentId = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique Comment ID')
+    content = models.CharField(max_length=200000)
+    blog = models.ForeignKey('Blog', on_delete=models.SET_NULL, null=True)
+    commenter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date = models.DateField(null=False)
+
+    class Meta: 
+        ordering = ['date']
+    
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.content
+
+
 class Blog(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
@@ -12,6 +27,12 @@ class Blog(models.Model):
 
     class Meta: 
         ordering = ['-date']
+
+    def display_most_recent_comment(self):
+        comment = Comment.objects.filter(blog=self.id)[0].content
+        return comment
+    
+    display_most_recent_comment.short_description = 'Most Recent Comment'
     
     def __str__(self):
         """String for representing the Model object."""
@@ -36,18 +57,4 @@ class Author(models.Model):
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'
 
-
-class Comment(models.Model):
-    commentId = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique Comment ID')
-    comment = models.CharField(max_length=200000)
-    blog = models.ForeignKey('Blog', on_delete=models.SET_NULL, null=True)
-    commenter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    date = models.DateField(null=False)
-
-    class Meta: 
-        ordering = ['date']
-    
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.comment
 
