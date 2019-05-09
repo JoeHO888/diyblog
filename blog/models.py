@@ -13,15 +13,22 @@ class Comment(models.Model):
 
     class Meta: 
         ordering = ['date']
+
+    def display_truncated_content(self):
+        if len(self.content)>=72:
+            return self.content[:71]+"..."
+        else:
+            return self.content
     
+    display_truncated_content.short_description = 'Truncated Content (75 Characters)'
+
     def __str__(self):
-        """String for representing the Model object."""
         return self.content
 
 
 class Blog(models.Model):
     title = models.CharField(max_length=200)
-    Blogger = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
+    blogger = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
     post = models.TextField(max_length=10000000, help_text='Enter a blog post')
     date = models.DateField(null=False)
 
@@ -29,7 +36,7 @@ class Blog(models.Model):
         ordering = ['-date']
 
     def display_most_recent_comment(self):
-        comment = "No Comment" or Comment.objects.filter(blog=self.id)[0].content
+        comment = "No " or Comment.objects.filter(blog=self.id)[0].content
         return comment
     
     display_most_recent_comment.short_description = 'Most Recent Comment'

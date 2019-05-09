@@ -1,7 +1,5 @@
 from django.shortcuts import render
-
-# Create your views here.
-
+from django.views import generic
 from blog.models import Blog, Blogger, Comment
 
 def index(request):
@@ -18,3 +16,12 @@ def index(request):
     }
 
     return render(request, 'index.html', context=context)
+
+
+
+class BlogListView(generic.ListView):
+    model = Blog
+
+class BlogDetailView(generic.DetailView):
+    model = Blog
+
