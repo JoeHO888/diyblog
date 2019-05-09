@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from blog.models import Author, Blog, Comment
+from blog.models import Blogger, Blog, Comment
 
 class CommentInline(admin.TabularInline):
     model = Comment
@@ -14,12 +14,12 @@ class BlogInline(admin.TabularInline):
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'date','display_most_recent_comment')
-    list_filter = ('author', 'date')
+    list_display = ('title',  'date','display_most_recent_comment')
+    # list_filter = ( 'date')
     inlines = [CommentInline]
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
+@admin.register(Blogger)
+class BloggerAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'date_of_birth','date_of_death')
     inlines = [BlogInline]
     

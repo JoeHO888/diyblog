@@ -21,7 +21,7 @@ class Comment(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
+    Blogger = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
     post = models.TextField(max_length=10000000, help_text='Enter a blog post')
     date = models.DateField(null=False)
 
@@ -42,7 +42,7 @@ class Blog(models.Model):
         """Returns the url to access a detail record for this book."""
         return reverse('blog-detail', args=[str(self.id)])
 
-class Author(models.Model):
+class Blogger(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -52,7 +52,7 @@ class Author(models.Model):
         ordering = ['last_name', 'first_name']
 
     def get_absolute_url(self):
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('Blogger-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'
