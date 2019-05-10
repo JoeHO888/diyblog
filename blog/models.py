@@ -34,6 +34,12 @@ class Blog(models.Model):
 
     class Meta: 
         ordering = ['-date']
+    
+    def display_truncated_post(self):
+        if len(self.post)>=72:
+            return self.post[:71]+"..."
+        else:
+            return self.post
 
     def display_most_recent_comment(self):
         comment = "No " or Comment.objects.filter(blog=self.id)[0].content
@@ -59,7 +65,7 @@ class Blogger(models.Model):
         ordering = ['last_name', 'first_name']
 
     def get_absolute_url(self):
-        return reverse('Blogger-detail', args=[str(self.id)])
+        return reverse('blogger-detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.first_name}, {self.last_name}'

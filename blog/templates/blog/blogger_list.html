@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Blogger List</h1>
+  {% if blogger_list %}
+  <ul>
+    {% for blogger in blogger_list %}
+      <li>
+        <a href="{{ blogger.get_absolute_url }}">{{blogger.first_name}}, {{blogger.last_name}}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no blogs in the library.</p>
+  {% endif %}       
+{% endblock %}
