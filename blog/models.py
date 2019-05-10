@@ -9,10 +9,10 @@ class Comment(models.Model):
     content = models.CharField(max_length=200000)
     blog = models.ForeignKey('Blog', on_delete=models.SET_NULL, null=True)
     commenter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    date = models.DateField(null=False)
+    datetime = models.DateTimeField(null=False)
 
     class Meta: 
-        ordering = ['date']
+        ordering = ['datetime']
 
     def display_truncated_content(self):
         if len(self.content)>=72:
@@ -30,10 +30,10 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     blogger = models.ForeignKey('Blogger', on_delete=models.SET_NULL, null=True)
     post = models.TextField(max_length=10000000, help_text='Enter a blog post')
-    date = models.DateField(null=False)
+    datetime = models.DateTimeField(null=False)
 
     class Meta: 
-        ordering = ['-date']
+        ordering = ['-datetime']
     
     def display_truncated_post(self):
         if len(self.post)>=72:

@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.views import generic
 from blog.models import Blog, Blogger, Comment
 from django.views.generic.list import MultipleObjectMixin
+from django.views.generic.edit import CreateView
+import datetime 
+from django.urls import reverse
+
 def index(request):
 
     num_blog = Blog.objects.all().count()
@@ -17,6 +21,19 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
+class CommentCreate(CreateView):
+    model = Comment
+    fields = ['content']
+
+    def form_valid(self, form):
+        blog = Blog.objects.get(id=self.kwargs['pk'])
+        form.instance.blog = blog
+        form.instance.datetime = datetime.datetime.now() 
+        form.instance.commenter = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog-detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class BlogListView(generic.ListView):
@@ -31,7 +48,6 @@ class BlogDetailView(generic.DetailView,MultipleObjectMixin):
         object_list = Comment.objects.filter(blog=self.object)
         context = super(BlogDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
-
 
 class BloggerListView(generic.ListView):
     model = Blogger

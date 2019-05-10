@@ -13,7 +13,7 @@
       <hr>
       <p>Title: <a href="{{blog.get_absolute_url}}">{{blog.title}}<a></p>
       <p>Post: {{blog.display_truncated_post}}</p>
-      <p>At {{blog.date}}</p>
+      <p>At {{blog.datetime}}</p>
     {% endfor %}
   </div>
 {% endblock %}

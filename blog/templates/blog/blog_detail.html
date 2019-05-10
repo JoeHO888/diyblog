@@ -4,7 +4,7 @@
   <h1>Title: {{ blog.title }}</h1>
 
   <p><strong>Author:</strong> <a href="{{blog.blogger.get_absolute_url}}">{{ blog.blogger }}</a></p> 
-  <p><strong>Date:</strong> {{ blog.date }}</p>
+  <p><strong>Time:</strong> {{ blog.datetime }}</p>
   <p><strong>Post:</strong> {{ blog.post }}</p> 
 
   <div style="margin-left:20px;margin-top:20px">
@@ -14,7 +14,7 @@
       <hr>
       <p>{{comment.content}}</p>
       <p>By {{comment.commenter}}</p>
-      <p>At {{comment.date}}</p>
+      <p>At {{comment.datetime}}</p>
     {% endfor %}
   </div>
 {% endblock %}

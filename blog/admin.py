@@ -14,8 +14,8 @@ class BlogInline(admin.TabularInline):
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'blogger','date','display_most_recent_comment')
-    list_filter = ( 'blogger','date')
+    list_display = ('title', 'blogger','datetime','display_most_recent_comment')
+    list_filter = ( 'blogger','datetime')
     inlines = [CommentInline]
 
 @admin.register(Blogger)
@@ -26,5 +26,5 @@ class BloggerAdmin(admin.ModelAdmin):
 # admin.site.register(Comment)
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('commentId', 'blog', 'commenter','date','display_truncated_content')
+    list_display = ('commentId', 'blog', 'commenter','datetime','display_truncated_content')
     list_filter = ('blog', 'commenter')
