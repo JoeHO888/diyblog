@@ -9,11 +9,11 @@
   <div style="margin-left:20px;margin-top:20px">
     <h4>Blogs</h4>
 
-    {% for blog in blogger.blog_set.all %}
+    {% for blog in object_list %}
       <hr>
-      <p><a href="{{blog.get_absolute_url}}">{{blog.title}}<a></p>
-      <p>{{blog.display_truncated_post}}</p>
-      <p>{{blog.date}}</p>
+      <p>Title: <a href="{{blog.get_absolute_url}}">{{blog.title}}<a></p>
+      <p>Post: {{blog.display_truncated_post}}</p>
+      <p>At {{blog.date}}</p>
     {% endfor %}
   </div>
 {% endblock %}

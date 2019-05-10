@@ -1,19 +1,22 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  {{is_paginated }}
   <h1>Title: {{ blog.title }}</h1>
 
-  <p><strong>Author:</strong> <a href="{{blog.blogger.get_absolute_url}}">{{ blog.blogger }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Author:</strong> <a href="{{blog.blogger.get_absolute_url}}">{{ blog.blogger }}</a></p> 
   <p><strong>Date:</strong> {{ blog.date }}</p>
   <p><strong>Post:</strong> {{ blog.post }}</p> 
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Comments</h4>
 
-    {% for comment in blog.comment_set.all %}
+    {% for comment in object_list %}
       <hr>
       <p>{{comment.content}}</p>
+      <p>By {{comment.commenter}}</p>
+      <p>At {{comment.date}}</p>
     {% endfor %}
   </div>
 {% endblock %}
+
+

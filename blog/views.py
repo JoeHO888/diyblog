@@ -23,12 +23,11 @@ class BlogListView(generic.ListView):
     model = Blog
     paginate_by = 2
 
-class BlogDetailView(generic.DetailView):
+class BlogDetailView(generic.DetailView,MultipleObjectMixin):
     model = Blog
     paginate_by = 1
 
     def get_context_data(self, **kwargs):
-        
         object_list = Comment.objects.filter(blog=self.object)
         context = super(BlogDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
@@ -37,6 +36,12 @@ class BlogDetailView(generic.DetailView):
 class BloggerListView(generic.ListView):
     model = Blogger
 
-class BloggerDetailView(generic.DetailView):
+class BloggerDetailView(generic.DetailView,MultipleObjectMixin):
     model = Blogger
+    paginate_by = 1
+
+    def get_context_data(self, **kwargs):
+        object_list = Blog.objects.filter(blogger=self.object)
+        context = super(BloggerDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
 
