@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from blog.models import Blog, Blogger, Comment
-
+from django.views.generic.list import MultipleObjectMixin
 def index(request):
 
     num_blog = Blog.objects.all().count()
@@ -25,6 +25,13 @@ class BlogListView(generic.ListView):
 
 class BlogDetailView(generic.DetailView):
     model = Blog
+    paginate_by = 1
+
+    def get_context_data(self, **kwargs):
+        
+        object_list = Comment.objects.filter(blog=self.object)
+        context = super(BlogDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
 
 
 class BloggerListView(generic.ListView):
