@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
 
 urlpatterns = [
@@ -7,5 +7,4 @@ urlpatterns = [
     path('blog/<int:pk>', views.BlogDetailView.as_view(), name='blog-detail'),
     path('bloggers/', views.BloggerListView.as_view(), name='bloggers'),
     path('blogger/<int:pk>', views.BloggerDetailView.as_view(), name='blogger-detail'),
-
 ]
