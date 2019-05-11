@@ -5,6 +5,11 @@ from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import CreateView
 import datetime 
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from blog.forms import CommentForm
+from django.http import HttpResponseRedirect,HttpResponse
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 def index(request):
 
@@ -21,7 +26,7 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
-class CommentCreate(CreateView):
+class CommentCreate(LoginRequiredMixin,CreateView):
     model = Comment
     fields = ['content']
 
@@ -47,6 +52,7 @@ class BlogDetailView(generic.DetailView,MultipleObjectMixin):
     def get_context_data(self, **kwargs):
         object_list = Comment.objects.filter(blog=self.object)
         context = super(BlogDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        context['form'] = CommentForm()
         return context
 
 class BloggerListView(generic.ListView):
@@ -61,3 +67,19 @@ class BloggerDetailView(generic.DetailView,MultipleObjectMixin):
         context = super(BloggerDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
 
+
+
+@login_required
+def MakeComment(request, pk):
+    blog = Blog.objects.get(id=pk)
+    form = CommentForm(request.POST)
+    form.instance.blog = blog
+    form.instance.datetime = timezone.now() 
+    form.instance.commenter = request.user
+
+    if form.is_valid():
+        form.save()
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+        
+        

@@ -7,6 +7,19 @@
   <p><strong>Time:</strong> {{ blog.datetime }}</p>
   <p><strong>Post:</strong> {{ blog.post }}</p> 
 
+  {% if user.is_authenticated %}
+  <form action="{{blog.id}}/create/" method="post" style='display:inline;'>
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit">
+    <input type="hidden" name="next" value="{{ request.path }}">
+  </form>
+  {% else %}
+  <h2>Please Login to make Comment</h2>
+  {% endif %}  
+
   <div style="margin-left:20px;margin-top:20px">
     <h4>Comments</h4>
 
@@ -17,6 +30,8 @@
       <p>At {{comment.datetime}}</p>
     {% endfor %}
   </div>
+
 {% endblock %}
+
 
 
