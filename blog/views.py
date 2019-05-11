@@ -11,6 +11,8 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
 def index(request):
 
@@ -85,13 +87,52 @@ def RegistrationConfirmationEmail(request):
 
 class UserRegister(CreateView):
     model = User
-    fields = ['username','email','password']
+    fields = ['username','email','password','first_name','last_name']
     success_url = reverse_lazy('register-done')
 
     def form_valid(self, form):
         form.instance.is_active = False
         response = super(UserRegister, self).form_valid(form)
+        activation_message, activation_message_html = self.create_activation_message(form)
+        send_mail(
+            'Registration Confirmation',
+            activation_message,
+            settings.EMAIL_HOST_USER,
+            [form.instance.email],
+            fail_silently=False,
+            html_message = activation_message_html
+        )
         return response
+    
+    def create_activation_message(self,form):
+        link = self.request.META['HTTP_HOST']+"/accounts/activation/abcd"+str(form.instance.id)
+        activation_message = f''' 
+        Hi {form.instance.first_name} {form.instance.last_name},
+                                  
+        Please Click the linke here to activate your account.
+        http://{link}{link}
+                                          
+        Regards,
+        Blog Team.
+        '''
+
+        activation_message_html = f''' 
+        <p>Hi {form.instance.first_name} {form.instance.last_name},</p>
+                                  
+        <p>Please Click the linke here to activate your account.</p>
+        <a href=http://{link}>http://{link}</a>
+                                          
+        <p>Regards,</p>
+        <p>Blog Team.</p>
+        '''
+        return activation_message, activation_message_html
 
 
-
+def ActivateAccount(request,token):
+    id = int(token[4:])
+    print(id)
+    user = User.objects.get(id=id)
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+    return HttpResponseRedirect(reverse('index'))
