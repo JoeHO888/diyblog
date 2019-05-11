@@ -4,12 +4,13 @@ from blog.models import Blog, Blogger, Comment
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.edit import CreateView
 import datetime 
-from django.urls import reverse
+from django.urls import reverse,reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from blog.forms import CommentForm
 from django.http import HttpResponseRedirect,HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 def index(request):
 
@@ -40,7 +41,6 @@ class CommentCreate(LoginRequiredMixin,CreateView):
     def get_success_url(self):
         return reverse('blog-detail', kwargs={'pk': self.kwargs['pk']})
 
-
 class BlogListView(generic.ListView):
     model = Blog
     paginate_by = 2
@@ -67,8 +67,6 @@ class BloggerDetailView(generic.DetailView,MultipleObjectMixin):
         context = super(BloggerDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
 
-
-
 @login_required
 def MakeComment(request, pk):
     blog = Blog.objects.get(id=pk)
@@ -81,5 +79,19 @@ def MakeComment(request, pk):
         form.save()
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
-        
-        
+
+def RegistrationConfirmationEmail(request):
+    return render(request,'auth/user_form_done.html')
+
+class UserRegister(CreateView):
+    model = User
+    fields = ['username','email','password']
+    success_url = reverse_lazy('register-done')
+
+    def form_valid(self, form):
+        form.instance.is_active = False
+        response = super(UserRegister, self).form_valid(form)
+        return response
+
+
+
