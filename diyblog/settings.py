@@ -137,6 +137,6 @@ DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['secure-shore-60624.herokuapp.com','127.0.0.1']
 EMAIL_HOST_USER = os.environ.get('DJANGO_GMAIL_ACCOUNT', 'demo@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_GMAIL_PASSWORD', '12345678')
