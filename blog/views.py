@@ -13,6 +13,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm
+from customUser.forms import SignUpForm
 
 def index(request):
 
@@ -82,30 +84,12 @@ def MakeComment(request, pk):
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
 
-def RegistrationConfirmationEmail(request):
-    return render(request,'auth/user_form_done.html')
+def SignUpDone(request):
+    return render(request,'auth/signup_done.html')
 
-class UserRegister(CreateView):
-    model = User
-    fields = ['username','email','password','first_name','last_name']
-    success_url = reverse_lazy('register-done')
-
-    def form_valid(self, form):
-        form.instance.is_active = False
-        response = super(UserRegister, self).form_valid(form)
-        activation_message, activation_message_html = self.create_activation_message(form)
-        send_mail(
-            'Registration Confirmation',
-            activation_message,
-            settings.EMAIL_HOST_USER,
-            [form.instance.email],
-            fail_silently=False,
-            html_message = activation_message_html
-        )
-        return response
-    
-    def create_activation_message(self,form):
-        link = self.request.META['HTTP_HOST']+"/accounts/activation/abcd"+str(form.instance.id)
+def SignUp(request):
+    def create_activation_message(form):
+        link = request.META['HTTP_HOST']+"/accounts/activation/abcd"+str(form.instance.id)
         activation_message = f''' 
         Hi {form.instance.first_name} {form.instance.last_name},
                                   
@@ -126,6 +110,36 @@ class UserRegister(CreateView):
         <p>Blog Team.</p>
         '''
         return activation_message, activation_message_html
+
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.email = form.cleaned_data['email']
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.save()
+            activation_message, activation_message_html = create_activation_message(form)
+            send_mail(
+                'Registration Confirmation',
+                activation_message,
+                settings.EMAIL_HOST_USER,
+                [form.instance.email],
+                fail_silently=False,
+                html_message = activation_message_html
+            )
+            return HttpResponseRedirect(reverse('signup-done') )
+    else:
+        form = SignUpForm()
+    context = {'form': form}
+    return render(request, 'auth/signup.html',context)
+
+
+class UserRegister(CreateView):
+    model = User
+    fields = ['username','email','password','first_name','last_name']
+    success_url = reverse_lazy('register-done')
 
 
 def ActivateAccount(request,token):
