@@ -141,3 +141,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&
 ALLOWED_HOSTS = ['secure-shore-60624.herokuapp.com','127.0.0.1']
 EMAIL_HOST_USER = os.environ.get('DJANGO_GMAIL_ACCOUNT', 'demo@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_GMAIL_PASSWORD', '12345678')
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
