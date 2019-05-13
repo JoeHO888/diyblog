@@ -17,7 +17,6 @@ from django.contrib.auth.forms import UserCreationForm
 from customUser.forms import SignUpForm
 
 def index(request):
-
     num_blog = Blog.objects.all().count()
     num_Blogger = Blogger.objects.all().count()
     num_comment = Comment.objects.all().count()
