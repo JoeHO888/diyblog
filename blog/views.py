@@ -18,7 +18,7 @@ from customUser.forms import SignUpForm
 
 def index(request):
     num_blog,num_Blogger,num_comment = 0, 0,0
-    for i in range(1000):
+    for i in range(10000):
         num_blog += Blog.objects.all().count()
         num_Blogger += Blogger.objects.all().count()
         num_comment += Comment.objects.all().count()
