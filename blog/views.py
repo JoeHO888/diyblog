@@ -17,9 +17,11 @@ from django.contrib.auth.forms import UserCreationForm
 from customUser.forms import SignUpForm
 
 def index(request):
-    num_blog = Blog.objects.all().count()
-    num_Blogger = Blogger.objects.all().count()
-    num_comment = Comment.objects.all().count()
+    num_blog,num_Blogger,num_comment = 0, 0,0
+    for i in range(1000):
+        num_blog += Blog.objects.all().count()
+        num_Blogger += Blogger.objects.all().count()
+        num_comment += Comment.objects.all().count()
 
     context = {
         'num_blog': num_blog,
